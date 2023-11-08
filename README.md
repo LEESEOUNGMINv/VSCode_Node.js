@@ -13,6 +13,10 @@
 # WriteForm.js
 # Header.js     # Header.css
 
-
-
 # BoardList.js
+//npm install moment --force
+
+# MainList.js > 내일 작성
+# src > oracle 폴더 생성 > 하위에 작성
+db.js
+dbConfig.js

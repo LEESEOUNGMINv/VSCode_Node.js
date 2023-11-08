@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import '../css/Header.css';
+import WriteForm from './WriteForm';
+import {BrowserRouter as Router, Route} from 'react-router-dom'; 
+import { Link } from "react-router-dom";
 
 class Header extends Component{
     render(){

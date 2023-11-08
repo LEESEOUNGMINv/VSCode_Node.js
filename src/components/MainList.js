@@ -2,9 +2,11 @@ import React , { Component } from "react";
 //npm install react-router-dom
 import {BrowserRouter as Router} from 'react-router-dom'; 
 //npm install @material-ui/core --force
-import {Table,TableHead,TableRow,TableCell} from '@material-ui/core';
+import {Table,TableHead,TableRow,TableCell, AppBar} from '@material-ui/core';
 //npm install @material-ui/icons --force
 import BorderList from './BoradList';
+import Header from "./Header";
+import '../css/App.css';
 
 class MainList extends Component{
     state = {
@@ -16,7 +18,12 @@ class MainList extends Component{
     render(){
         return(
             <Router>
-                <div>
+                <div display="flex" alignitems="center" justifyContent="center">
+                    <AppBar position="static">
+                        <div>Header</div>
+                    </AppBar>
+                    <br/>
+
                     <h3 align='center'>게시판 목록</h3>
                     <Table>
                         <TableHead>

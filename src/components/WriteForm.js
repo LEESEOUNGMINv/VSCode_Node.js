@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import '../css/default.css';
-import WriteForm from './WriteForm';
 //npm install react-router-dom
 import {BrowserRouter as Router} from 'react-router-dom'; 
 //npm install @material-ui/core --force
-import {Table,TableHead,TableRow,TableCell} from '@material-ui/core';
+import {Table,TableHead,TableRow,TableCell,TableBody} from '@material-ui/core';
 
 class WriteForm extends Component{
     constructor(props){
