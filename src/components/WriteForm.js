@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import '../css/default.css';
 //npm install react-router-dom
-import {BrowserRouter as Router} from 'react-router-dom'; 
 //npm install @material-ui/core --force
 import {Table,TableHead,TableRow,TableCell,TableBody} from '@material-ui/core';
 

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import BorderList from './BoradList';
-import {Table,TableHead,TableRow,TableCell, Input} from '@material-ui/core';
+import {Table,TableRow,TableCell, Input} from '@material-ui/core';
 import '../css/default.css'
 import moment from 'moment' // 날짜 타입
 //npm install moment --force
