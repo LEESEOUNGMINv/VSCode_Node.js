@@ -6,6 +6,7 @@ import {Table,TableHead,TableRow,TableCell, AppBar} from '@material-ui/core';
 //npm install @material-ui/icons --force
 import BorderList from './BoradList';
 import '../css/App.css';
+import Header from './Header';
 
 class MainList extends Component{
     state = {
@@ -41,7 +42,7 @@ class MainList extends Component{
             <Router>
                 <div display="flex" alignitems="center" justifyContent="center">
                     <AppBar position="static">
-                        <div>Header</div>
+                        <div><Header /></div>
                     </AppBar>
                     <br/>
 

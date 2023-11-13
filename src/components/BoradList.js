@@ -10,7 +10,7 @@ class BoardList extends Component{
         super(props)
         this.state = {
             value : '',
-            show_update : 'block',
+            show_update : 'none',
             show_delete : 'none'
         }
     }

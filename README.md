@@ -15,7 +15,7 @@
 # src > components 폴더 생성 > 하위에 작성
 
 # MainList.js
- //npm install react-router-dom
+ //npm install react-router-dom     //"react-dom": "^18.2.0", → 버전 낮추기
  //npm install @material-ui/core --force
  //npm install @material-ui/icons --force
 # App.js
@@ -41,6 +41,7 @@ module.exports = {
 }
 
 # db.js (CRUD 작성) → node.js
+ //CRUD
  //테이블 생성
  //scott_01 계정에서 실행
 <!-- DROP TABLE react_board_tbl CASCADE constraints;
@@ -93,6 +94,24 @@ SELECT * FROM react_board_tbl ORDER BY board_no DESC -->
  # db.js
  //require('모듈') → 해당 모듈을 설치한다.
 
- # nodemon 실행
- //workspace_react > board-node > oracle > nodemon db.js
+ # "proxy": "http://localhost:5000", 추가
+
+ # -------------------------------------------------
+
+ # nodemon 실행 - 경로 주의 (cd src/oracle)
+ //workspace_react > board-node > cd src / oracle > nodemon db.js
  //nodemon db.js
+
+# NJS-138: connections to this database server version are not supported by node-oracledb in Thin mode
+# NJS-138 오류
+ workspace_react>board-node> npm install react@^17.0.1 react-dom@^17.0.1   # 버전 다운
+    workspace_react>board-node> npm install react-router-dom@^5.2.0 --force
+     workspace_react>board-node> workspace_react>board-node> npm install oracledb@^5.5.0 
+
+# 글작성
+# db.js
+ //sql문 추가
+ //화면 : 작성하기
+ //-nodemon 재실행 / CTRL+C / nodemon db.js
+
+ # npm start

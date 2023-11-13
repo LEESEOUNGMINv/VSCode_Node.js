@@ -26,55 +26,195 @@ var router = express.Router();
 oracledb.autoCommit = true;
 
 //-----------------------------------------------------------------CRUD
-// 데이터 조회
-app.get('/api/boardList', function(){
-    console.log('[ boardList ]');   //nodemon 콘솔에서 확인
+
+// 데이터 조회 
+app.get('/api/boardList', function(request, response){
+    console.log(' --- boardList select ---')   // nodemon 콘솔에서 확인
     oracledb.getConnection({
-        user:dbConfig.user,
-        password:dbConfig.password,
+        user : dbConfig.user,
+        password : dbConfig.password,
         connectString : dbConfig.connectString
-        },
-        function(err, connection){
-            if(err){
-                console.log('접속 실패',err);
+    },
+    function(err, connection) {
+        if(err) {
+            console.log('접속 실패', err);
+            console.error(err.message);
+            return;
+        }
+        console.log('접속 성공');
+        let query = 'SELECT * FROM react_board_tbl ORDER BY board_no DESC';
+        connection.execute(query, [], {outFormat:oracledb.OBJECT}, function(err, result) {
+            if(err) {
                 console.error(err.message);
+                doRelease(connection);
                 return;
             }
-            console.log('접속 성공');
-            let query = 'SELECT * FROM react_board_tbl ORDER BY board_no DESC';
-            connection.execute(query,[],{outFormat:oracledb.OBJECT},function(err, result){
-                if(err){
-                    console.error(err.message);
-                    doRelease(connection);
-                    return;
-                }
-                console.log(result.rows); //데이터
-                doRelease(connection, result.rows); //connection 해제
-                response.send(result.rows);
-            });
-        }); //getConnection(), function{}
+            console.log(result.rows);   // 데이터
+            doRelease(connection, result.rows);  // connection 해제
+            response.send(result.rows);
+        });
+    });
 
-        //DB연결 해제
-        function doRelease(connection, rowList){
-            connection.release(function(err, rows){
-                if(err){
-                    console.error(err.message);
-                }
-                // DB 종료시까지 모두 완료되었을때 응답 데이터 변환
-                console.log('list size : ' + rowList.lingth);
-                console.log(rowList); //nodemon 콘솔창에 select 결과
-            });
-        } //doRelease()
-}); //app.get()
+    // 디비 연결해제
+    function doRelease(connection, rowList) {
+        connection.release(function(err, rows) {
+            if(err) {
+                console.error(err.message);
+            }
+
+            // DB 종료까지 모두 완료되었을시 응답 데이터 반환
+            console.log('list size:' + rowList.length);
+            console.log(rowList);  // nodemon 콘솔창에 select 결과
+        });
+    }
+});
 
 // 데이터 등록
+app.post('/api/boardInsert2', function(request, response){
+    console.log(' --- boardList insert ---')   // nodemon 콘솔에서 확인
+    oracledb.getConnection({
+        user : dbConfig.user,
+        password : dbConfig.password,
+        connectString : dbConfig.connectString
+    },
+    function(err, connection) {
+        if(err) {
+            console.log('접속 실패', err);
+            console.error(err.message);
+            return;
+        }
+        console.log('접속 성공');
+        let query = 'INSERT INTO react_board_tbl(board_no, board_title, board_content, board_email) '
+        + ' VALUES ((SELECT NVL(MAX(board_no)+1, 1) FROM react_board_tbl), :board_title, :board_content, :board_email)';
+        
+        var binddata = [
+            request.body.board_title,
+            request.body.board_content,
+            request.body.board_email
+        ];
+
+        connection.execute(query, binddata, function(err, result) {
+            if(err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+            }
+            console.log('Row Insert : ' + result.rowsAffected);   // 데이터
+            doRelease(connection, result.rows);  // connection 해제
+            response.redirect('/'); //localhost:3000/ → 리스트 결과를 다시 뿌려준다.
+        });
+    });
+
+    // 디비 연결해제
+    function doRelease(connection, rowList) {
+        connection.release(function(err, rows) {
+            if(err) {
+                console.error(err.message);
+            }
+
+            // DB 종료까지 모두 완료되었을시 응답 데이터 반환
+            // console.log('list size:' + rowList.length);
+            // console.log(rowList);  // nodemon 콘솔창에 select 결과
+        });
+    }
+});
 
 // 데이터 수정
+app.post('/api/boardUpdate', function(request, response){
+    console.log(' --- boardList update ---')   // nodemon 콘솔에서 확인
+    oracledb.getConnection({
+        user : dbConfig.user,
+        password : dbConfig.password,
+        connectString : dbConfig.connectString
+    },
+    function(err, connection) {
+        if(err) {
+            console.log('접속 실패', err);
+            console.error(err.message);
+            return;
+        }
+        console.log('접속 성공');
+        let query = 'UPDATE react_board_tbl SET board_title = :board_title, board_content = :board_content, board_email = :board_email WHERE board_no = :board_no';
+        
+        var binddata = [
+            request.body.board_title,
+            request.body.board_content,
+            request.body.board_email,
+            request.body.board_no
+        ];
+
+        connection.execute(query, binddata, function(err, result) {
+            if(err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+            }
+            console.log('Row Insert : ' + result.rowsAffected);   // 데이터
+            doRelease(connection, result.rows);  // connection 해제
+            response.redirect('/'); //localhost:3000/ → 리스트 결과를 다시 뿌려준다.
+        });
+    });
+
+    // 디비 연결해제
+    function doRelease(connection, rowList) {
+        connection.release(function(err, rows) {
+            if(err) {
+                console.error(err.message);
+            }
+
+            // DB 종료까지 모두 완료되었을시 응답 데이터 반환
+            // console.log('list size:' + rowList.length);
+            // console.log(rowList);  // nodemon 콘솔창에 select 결과
+        });
+    }
+});
 
 // 데이터 삭제
+app.post('/api/boardDelete', function(request, response){
+    console.log(' --- boardList delete ---')   // nodemon 콘솔에서 확인
+    oracledb.getConnection({
+        user : dbConfig.user,
+        password : dbConfig.password,
+        connectString : dbConfig.connectString
+    },
+    function(err, connection) {
+        if(err) {
+            console.log('접속 실패', err);
+            console.error(err.message);
+            return;
+        }
+        console.log('접속 성공');
+        let query = 'DELETE FROM react_board_tbl WHERE board_no = :board_no';
+        
+        var binddata = [
+            request.body.board_no
+        ];
 
-// DB 연결 해제
+        connection.execute(query, binddata, function(err, result) {
+            if(err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+            }
+            console.log('Row Insert : ' + result.rowsAffected);   // 데이터
+            doRelease(connection, result.rows);  // connection 해제
+            response.redirect('/'); //localhost:3000/ → 리스트 결과를 다시 뿌려준다.
+        });
+    });
 
+    // 디비 연결해제
+    function doRelease(connection, rowList) {
+        connection.release(function(err, rows) {
+            if(err) {
+                console.error(err.message);
+            }
+
+            // DB 종료까지 모두 완료되었을시 응답 데이터 반환
+            // console.log('list size:' + rowList.length);
+            // console.log(rowList);  // nodemon 콘솔창에 select 결과
+        });
+    }
+});
 //-----------------------------------------------------------------
 
 // 라우터 객체를 app 객체에 등록
